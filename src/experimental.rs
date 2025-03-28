@@ -3,7 +3,9 @@ use gtk4::{DrawingArea, GestureDrag};
 use std::cell::RefCell;
 use std::rc::Rc;
 
-const SMOOTHNESS: f64 = 3.0;
+const SMOOTHNESS: f64 = 5.0;
+const MAX_POINTS: usize = 1_000;
+
 struct DrawingState {
     whiteboard: gtk4::DrawingArea,
 
@@ -65,6 +67,8 @@ pub fn setup_draw(whiteboard: &DrawingArea) {
             state.points.push((x, y));
         }
 
+        println!("{}", steps);
+
         state.last_point = Some(new_pos);
         state.whiteboard.queue_draw();
     });
@@ -73,7 +77,16 @@ pub fn setup_draw(whiteboard: &DrawingArea) {
 
     // Drawing function
     whiteboard.set_draw_func(move |_, cr, _width, _height| {
-        let state = drawing_state.borrow();
+        let mut state = drawing_state.borrow_mut();
+
+        let len = {
+            if state.points.len() >= MAX_POINTS {
+                state.points.len() - MAX_POINTS
+            } else {
+                0
+            }
+        };
+        state.points = state.points[len..].to_vec();
 
         for &(x, y) in &state.points {
             cr.arc(x, y, 5.0, 0.0, std::f64::consts::TAU);
