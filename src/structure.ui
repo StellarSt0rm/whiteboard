@@ -1,0 +1,37 @@
+<interface>
+    <object class="GtkOverlay" id="overlay">
+        <property name="child">
+            <object class="GtkDrawingArea" id="whiteboard">
+                <property name="hexpand">true</property>
+                <property name="vexpand">true</property>
+            </object>
+        </property>
+    </object>
+
+    <object class="GtkListBox" id="toolbox_wrapper">
+        <property name="css_classes">boxed-list</property>
+
+        <property name="margin-bottom">10</property>
+        <property name="valign">GTK_ALIGN_END</property>
+        <property name="halign">GTK_ALIGN_CENTER</property>
+
+        <child>
+            <object class="GtkListBoxRow">
+                 <property name="focusable">false</property>
+
+                <property name="margin-start">10</property>
+                <property name="margin-end">10</property>
+                <property name="margin-top">10</property>
+                <property name="margin-bottom">10</property>
+
+                <child>
+                    <object class="GtkBox" id="toolbox">
+                        <property name="spacing">10</property>
+                        <property name="halign">GTK_ALIGN_CENTER</property>
+                        <property name="valign">GTK_ALIGN_END</property>
+                    </object>
+                </child>
+            </object>
+        </child>
+    </object>
+</interface>
