@@ -3,6 +3,9 @@ name = "whiteboard"
 version = "1.0.0"
 edition = "2024"
 
+repository = "https://github.com/StellarSt0rm/whiteboard"
+license = "MIT"
+
 [dependencies]
 gtk4 = "0.9.6"
 libadwaita = "0.7.2"
