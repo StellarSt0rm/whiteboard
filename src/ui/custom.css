@@ -1,12 +1,16 @@
-window {
+.main-window {
     background-color: rgba(0, 0, 0, 0.1);
     border: dashed 0.15rem darkslategray;
     border-radius: 1rem;
 }
 
-row {
+.main-window row {
     background: none;
 }
-list {
-    background-color: rgba(48, 48, 48, 0.9);
+.main-window list {
+    background-color: rgba(48, 48, 48, 0.95);
+}
+
+.help-title {
+  font-weight: bold;
 }

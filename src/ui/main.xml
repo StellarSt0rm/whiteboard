@@ -1,11 +1,11 @@
 <interface>
     <object class="GtkOverlay" id="overlay">
-        <property name="child">
+        <child>
             <object class="GtkDrawingArea" id="whiteboard">
                 <property name="hexpand">true</property>
                 <property name="vexpand">true</property>
             </object>
-        </property>
+        </child>
     </object>
 
     <object class="GtkListBox" id="toolbox_wrapper">
