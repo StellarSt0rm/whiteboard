@@ -3,7 +3,7 @@ name = "whiteboard"
 version = "1.0.0"
 edition = "2024"
 
-description = "A simple GTK4 whiteboard app using Rust"
+description = "A simple GTK4 whiteboard app made with Rust"
 repository = "https://github.com/StellarSt0rm/whiteboard"
 license = "MIT"
 
