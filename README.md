@@ -3,12 +3,12 @@ So, i was watching a YouTube video, and they were drawing on the screen to highl
 
 And as you can guess, i did. Anyways, enjoy!
 
-## Features (<10%)
+## Features (~50%)
 - [X] Interface design
 - [ ] Drawing functionality
-    - [X] Basic drawing (A bit sloppy, if anyone knows how to make it more responsive, tell me)
+    - [X] Basic drawing
+    - [X] Colors + Color picker
+    - [X] Stroke width
     - [ ] Erasing
         - [ ] Eraser tool
         - [ ] Clearing the full screen
-    - [ ] Colors
-    - [ ] Other tools
