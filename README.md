@@ -1,7 +1,7 @@
 # Whiteboard
-So, i was watching a YouTube video, and they were drawing on the screen to highlight things, and i thought "Damn, that's so cool, let's put all my other projects to rest and work on this!"
+So, I was watching a YouTube video, and they were drawing on the screen to highlight things, and I thought "Damn, that's so cool, let's put all my other projects to rest and work on this!"
 
-And as you can guess, i did. Anyways, enjoy!
+And as you can guess, I did... After like putting this one to rest for weeks after starting it. But I finally finished v1 and it mostly works, it has some weird things here and there though.
 
 ## Features (~50%)
 - [X] Interface design
