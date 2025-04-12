@@ -126,17 +126,7 @@ pub fn setup(
 
             cr.set_line_width(stroke.stroke_width);
             cr.set_source_color(&stroke.stroke_color);
-
-            cr.move_to(
-                stroke.points.first().unwrap().0, // X
-                stroke.points.first().unwrap().1, // Y
-            );
-
-            for &(x, y) in &stroke.points[1..] {
-                cr.line_to(x, y);
-            }
-            cr.stroke().unwrap();
-
+            
             // Add one ball if the stroke lenght is one
             if stroke.points.len() == 1 {
                 cr.arc(
@@ -147,7 +137,20 @@ pub fn setup(
                     std::f64::consts::TAU,
                 );
                 cr.fill().unwrap();
+
+                continue;
             }
+
+            // Make the line from the stroke points
+            cr.move_to(
+                stroke.points.first().unwrap().0, // X
+                stroke.points.first().unwrap().1, // Y
+            );
+
+            for &(x, y) in &stroke.points[1..] {
+                cr.line_to(x, y);
+            }
+            cr.stroke().unwrap();
         }
     });
 }
