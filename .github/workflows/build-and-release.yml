@@ -6,6 +6,9 @@ jobs:
   build-and-release:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Setup Nix
         uses: cachix/install-nix-action@v18
 
