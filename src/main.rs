@@ -75,6 +75,7 @@ fn app_closure(app: &Application) {
 
     ui::separator(&toolbox);
     ui::help_button(&toolbox);
+    ui::quit_button(&toolbox, window.clone());
 
     // Keyboard shortcuts
     let shortcut_controller = gtk4::ShortcutController::new();

@@ -4,6 +4,8 @@
             <object class="GtkDrawingArea" id="whiteboard">
                 <property name="hexpand">true</property>
                 <property name="vexpand">true</property>
+
+                <property name="focusable">true</property>
             </object>
         </child>
     </object>

@@ -1,16 +1,5 @@
 <interface>
-    <object class="GtkAboutDialog" id="dialog">
-        <property name="titlebar">
-            <object class="GtkHeaderBar">
-                <property name="title-widget">
-                    <object class="GtkLabel">
-                        <property name="label">Help</property>
-                        <property name="css-classes">title</property>
-                    </object>
-                </property>
-            </object>
-        </property>
-
+    <object class="GtkPopover" id="popover">
         <child>
             <!-- License Container -->
             <object class="GtkBox">

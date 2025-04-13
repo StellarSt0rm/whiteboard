@@ -12,6 +12,8 @@ pub fn drag_begin_gesture(drawing_state: crate::AppState, gesture_drag: &gtk4::G
 
             points: vec![(x, y)],
         });
+
+        state.whiteboard.grab_focus(); // Fixes some annoyances
         state.whiteboard.queue_draw();
     });
 }

@@ -54,7 +54,10 @@ pub fn build(
 // Toolbox   Buttons //
 // // // // // // // //
 pub fn separator(toolbox: &gtk4::Box) {
-    toolbox.append(&gtk4::Separator::new(gtk4::Orientation::Vertical));
+    let separator = gtk4::Separator::new(gtk4::Orientation::Vertical);
+    separator.set_tooltip_text(Some("Shh 🤫"));
+
+    toolbox.append(&separator);
 }
 
 pub fn change_color_button(
@@ -62,7 +65,8 @@ pub fn change_color_button(
     toolbox: &gtk4::Box,
     window: ApplicationWindow,
 ) {
-    let color_button = gtk4::Button::with_label("Change Color / Color Picker");
+    let color_button = gtk4::Button::with_label("Change Color");
+    color_button.set_tooltip_text(Some("Change Stroke Color"));
 
     color_button.connect_clicked(move |_| {
         let dialog = gtk4::ColorChooserDialog::new(Some("Choose A Color"), Some(&window));
@@ -96,6 +100,7 @@ pub fn stroke_size_button(drawing_state: crate::AppState, toolbox: &gtk4::Box) -
     let stroke_size_button = gtk4::SpinButton::builder()
         .adjustment(&adjustment)
         .numeric(true)
+        .tooltip_text("Change Stroke Size")
         .build();
 
     let drawing_state_clone = drawing_state.clone();
@@ -108,7 +113,8 @@ pub fn stroke_size_button(drawing_state: crate::AppState, toolbox: &gtk4::Box) -
 }
 
 pub fn undo_stroke_button(drawing_state: crate::AppState, toolbox: &gtk4::Box) {
-    let undo_stroke_button = gtk4::Button::with_label("Undo Last Stroke");
+    let undo_stroke_button = gtk4::Button::with_label("Undo");
+    undo_stroke_button.set_tooltip_text(Some("Undo Last Stroke"));
 
     undo_stroke_button.connect_clicked(move |_| {
         let mut state = drawing_state.borrow_mut();
@@ -120,7 +126,8 @@ pub fn undo_stroke_button(drawing_state: crate::AppState, toolbox: &gtk4::Box) {
 }
 
 pub fn clear_screen_button(drawing_state: crate::AppState, toolbox: &gtk4::Box) {
-    let clear_button = gtk4::Button::with_label("Clear Screen");
+    let clear_button = gtk4::Button::with_label("Clear");
+    clear_button.set_tooltip_text(Some("Clear All Strokes"));
 
     clear_button.connect_clicked(move |_| {
         let mut state = drawing_state.borrow_mut();
@@ -133,35 +140,50 @@ pub fn clear_screen_button(drawing_state: crate::AppState, toolbox: &gtk4::Box) 
 
 pub fn help_button(toolbox: &gtk4::Box) {
     let help_button = gtk4::Button::with_label("Help");
+    let builder = gtk4::Builder::from_string(include_str!("ui/help_dialog.xml"));
 
-    help_button.connect_clicked(|_| {
-        let builder = gtk4::Builder::from_string(include_str!("ui/help_dialog.xml"));
+    let popover: gtk4::Popover = builder.object("popover").unwrap();
+    let action_container: gtk4::Box = builder.object("action").unwrap();
+    let result_container: gtk4::Box = builder.object("result").unwrap();
 
-        let dialog: gtk4::AboutDialog = builder.object("dialog").unwrap();
-        let action_container: gtk4::Box = builder.object("action").unwrap();
-        let result_container: gtk4::Box = builder.object("result").unwrap();
+    help_button.set_tooltip_text(Some("Shortcuts Help & Credits"));
 
-        // Add data to containers
-        const LABELS: [(&str, &str); 3] = [
-            ("Control + Z:", "Undo Last Stroke"),
-            ("Control + C:", "Clear Screen"),
-            ("Scroll Wheel:", "Change Stroke Size"),
-        ];
+    // Add data to containers
+    const LABELS: [(&str, &str); 3] = [
+        ("Control + Z:", "Undo Last Stroke"),
+        ("Control + C:", "Clear Screen"),
+        ("Scroll Wheel:", "Change Stroke Size"),
+    ];
 
-        for (action, result) in LABELS {
-            let action_label = gtk4::Label::new(Some(action));
-            let result_label = gtk4::Label::new(Some(result));
+    for (action, result) in LABELS {
+        let action_label = gtk4::Label::new(Some(action));
+        let result_label = gtk4::Label::new(Some(result));
 
-            action_label.add_css_class("help-title");
-            action_label.set_halign(gtk4::Align::End);
-            result_label.set_halign(gtk4::Align::Start);
+        action_label.add_css_class("help-title");
+        action_label.set_halign(gtk4::Align::End);
+        result_label.set_halign(gtk4::Align::Start);
 
-            action_container.append(&action_label);
-            result_container.append(&result_label);
-        }
+        action_container.append(&action_label);
+        result_container.append(&result_label);
+    }
 
-        dialog.show();
+    // Connect the button to the popover
+    popover.set_parent(&help_button);
+
+    help_button.connect_clicked(move |_| {
+        popover.show();
     });
 
     toolbox.append(&help_button);
+}
+
+pub fn quit_button(toolbox: &gtk4::Box, window: ApplicationWindow) {
+    let quit_button = gtk4::Button::with_label("Quit");
+    quit_button.set_tooltip_text(Some("Quit Application"));
+
+    quit_button.connect_clicked(move |_| {
+        window.close();
+    });
+
+    toolbox.append(&quit_button)
 }
