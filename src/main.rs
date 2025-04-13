@@ -1,10 +1,38 @@
 mod draw;
+mod shortcuts;
 mod ui;
 
 use gtk4::prelude::*;
 use libadwaita::Application;
 use std::cell::RefCell;
 use std::rc::Rc;
+
+// Structs
+mod consts {
+    pub const SCROLL_MAX_CLAMP: f64 = 100.0;
+    pub const SCROLL_MIN_CLAMP: f64 = 5.0;
+    pub const SCROLL_MULTIPLY: f64 = 5.0; // How much to multiply `dy` by
+}
+
+type AppState = Rc<RefCell<DrawingState>>;
+
+pub struct DrawingState {
+    pub whiteboard: gtk4::DrawingArea,
+    pub stroke_width: f64,
+    pub stroke_color: gtk4::gdk::RGBA,
+
+    pub max_strokes: usize,
+    pub strokes: Vec<Stroke>,
+}
+
+#[derive(Debug)]
+pub struct Stroke {
+    pub stroke_width: f64,
+    pub stroke_color: gtk4::gdk::RGBA,
+
+    pub points: Vec<(f64, f64)>,
+}
+// ---
 
 fn main() {
     // Create a new Adw application.
@@ -21,75 +49,39 @@ fn app_closure(app: &Application) {
     let (window, _overlay, whiteboard, toolbox, _toolbox_wrapper) = ui::build(app);
 
     // Setup drawing
-    let drawing_state = Rc::new(RefCell::new(draw::DrawingState {
+    let gesture_drag = gtk4::GestureDrag::new();
+    let drawing_state = Rc::new(RefCell::new(DrawingState {
         whiteboard: whiteboard.clone(),
-        stroke_width: draw::SCROLL_MIN_CLAMP,
+        stroke_width: consts::SCROLL_MIN_CLAMP,
         stroke_color: gtk4::gdk::RGBA::new(1.0, 0.0, 0.0, 1.0),
 
         max_strokes: 1_000,
         strokes: Vec::new(),
     }));
 
-    draw::setup(&window, &whiteboard, drawing_state.clone());
+    draw::drag_begin_gesture(drawing_state.clone(), &gesture_drag);
+    draw::drag_update_gesture(drawing_state.clone(), &gesture_drag);
+    draw::set_drawing_function(drawing_state.clone());
 
-    // Make the UI buttons!
-    let color_button = gtk4::Button::with_label("Change Color / Color Picker");
-    let undo_button = gtk4::Button::with_label("Undo Last Stroke");
-    let help_button = gtk4::Button::with_label("Help");
+    whiteboard.add_controller(gesture_drag);
 
-    let drawing_state_clone = drawing_state.clone();
-    color_button.connect_clicked(move |_| {
-        let dialog = gtk4::ColorChooserDialog::new(Some("Choose A Color"), Some(&window));
-        dialog.set_rgba(&drawing_state_clone.borrow().stroke_color);
-        dialog.set_show_editor(true);
+    // Toolbox buttons
+    ui::change_color_button(drawing_state.clone(), &toolbox, window.clone());
+    let stroke_size_button = ui::stroke_size_button(drawing_state.clone(), &toolbox);
 
-        let dialog_clone = Rc::new(RefCell::new(dialog));
-        let dialog_clone_closure = dialog_clone.clone();
+    ui::separator(&toolbox);
+    ui::undo_stroke_button(drawing_state.clone(), &toolbox);
+    ui::clear_screen_button(drawing_state.clone(), &toolbox);
 
-        let drawing_state_clone = drawing_state_clone.clone();
-        dialog_clone.borrow().run_async(move |obj, _| {
-            obj.close();
-            drawing_state_clone.borrow_mut().stroke_color = dialog_clone_closure.borrow().rgba();
-        });
-    });
+    ui::separator(&toolbox);
+    ui::help_button(&toolbox);
 
-    let drawing_state_clone = drawing_state.clone();
-    undo_button.connect_clicked(move |_| {
-        let mut state = drawing_state_clone.borrow_mut();
-        state.strokes.pop();
-        state.whiteboard.queue_draw();
-    });
+    // Keyboard shortcuts
+    let shortcut_controller = gtk4::ShortcutController::new();
 
-    help_button.connect_clicked(|_| {
-        let builder = gtk4::Builder::from_string(include_str!("ui/help_dialog.xml"));
+    shortcuts::scroll_shortcut(drawing_state.clone(), &window, stroke_size_button);
+    shortcuts::control_z_shortcut(drawing_state.clone(), &shortcut_controller);
+    shortcuts::control_c_shortcut(drawing_state.clone(), &shortcut_controller);
 
-        let dialog: gtk4::AboutDialog = builder.object("dialog").unwrap();
-        let action_container: gtk4::Box = builder.object("action").unwrap();
-        let result_container: gtk4::Box = builder.object("result").unwrap();
-
-        // Add data to containers
-        const LABELS: [(&str, &str); 2] = [
-            ("Control + Z:", "Undo Last Stroke"),
-            ("Scroll Wheel:", "Change Stroke Size"),
-        ];
-
-        for (action, result) in LABELS {
-            let action_label = gtk4::Label::new(Some(action));
-            let result_label = gtk4::Label::new(Some(result));
-
-            action_label.add_css_class("help-title");
-            action_label.set_halign(gtk4::Align::End);
-            result_label.set_halign(gtk4::Align::Start);
-
-            action_container.append(&action_label);
-            result_container.append(&result_label);
-        }
-
-        dialog.show();
-    });
-
-    toolbox.append(&color_button);
-    toolbox.append(&undo_button);
-    toolbox.append(&gtk4::Separator::new(gtk4::Orientation::Vertical));
-    toolbox.append(&help_button);
+    window.add_controller(shortcut_controller);
 }
