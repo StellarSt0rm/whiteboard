@@ -16,6 +16,8 @@ jobs:
 
     - name: Install dependencies and build with Nix
       run: |
+        nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs  # Add the channel explicitly
+        nix-channel --update
         nix-shell --pure --run "cargo build --release"
 
     - name: Create GitHub Release
