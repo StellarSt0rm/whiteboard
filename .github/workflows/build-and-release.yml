@@ -26,9 +26,8 @@ jobs:
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
         run: |
-          gh release create "" \
+          gh release create "v" \
               "./target/release/whiteboard#whiteboard-linux" \
               --repo="$GITHUB_REPOSITORY" \
               --draft
