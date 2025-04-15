@@ -45,7 +45,6 @@ fn main() {
 }
 
 fn app_closure(app: &Application) {
-    // Build the UI
     let (window, _overlay, whiteboard, toolbox, _toolbox_wrapper) = ui::build(app);
 
     // Setup drawing
