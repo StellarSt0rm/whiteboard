@@ -33,8 +33,10 @@ pub fn control_z_shortcut(
     let callback = gtk4::CallbackAction::new(move |_, _| {
         let mut state = drawing_state.borrow_mut();
 
-        state.strokes.pop();
-        state.whiteboard.queue_draw();
+        if state.drawing == false {
+            state.strokes.pop();
+            state.whiteboard.queue_draw();
+        }
 
         true.into()
     });
@@ -52,8 +54,10 @@ pub fn control_c_shortcut(
     let callback = gtk4::CallbackAction::new(move |_, _| {
         let mut state = drawing_state.borrow_mut();
 
-        state.strokes.drain(..);
-        state.whiteboard.queue_draw();
+        if state.drawing == false {
+            state.strokes.drain(..);
+            state.whiteboard.queue_draw();
+        }
 
         true.into()
     });

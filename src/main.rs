@@ -12,17 +12,19 @@ mod consts {
     pub const SCROLL_MAX_CLAMP: f64 = 100.0;
     pub const SCROLL_MIN_CLAMP: f64 = 5.0;
     pub const SCROLL_MULTIPLY: f64 = 5.0; // How much to multiply `dy` by
+
+    pub const MAX_STROKES: usize = 1_000;
 }
 
 type AppState = Rc<RefCell<DrawingState>>;
 
 pub struct DrawingState {
     pub whiteboard: gtk4::DrawingArea,
+    pub strokes: Vec<Stroke>,
+    pub drawing: bool,
+
     pub stroke_width: f64,
     pub stroke_color: gtk4::gdk::RGBA,
-
-    pub max_strokes: usize,
-    pub strokes: Vec<Stroke>,
 }
 
 #[derive(Debug)]
@@ -51,15 +53,16 @@ fn app_closure(app: &Application) {
     let gesture_drag = gtk4::GestureDrag::new();
     let drawing_state = Rc::new(RefCell::new(DrawingState {
         whiteboard: whiteboard.clone(),
+        strokes: Vec::new(),
+        drawing: false,
+
         stroke_width: consts::SCROLL_MIN_CLAMP,
         stroke_color: gtk4::gdk::RGBA::new(1.0, 0.0, 0.0, 1.0),
-
-        max_strokes: 1_000,
-        strokes: Vec::new(),
     }));
 
     draw::drag_begin_gesture(drawing_state.clone(), &gesture_drag);
     draw::drag_update_gesture(drawing_state.clone(), &gesture_drag);
+    draw::drag_end_gesture(drawing_state.clone(), &gesture_drag);
     draw::set_drawing_function(drawing_state.clone());
 
     whiteboard.add_controller(gesture_drag);

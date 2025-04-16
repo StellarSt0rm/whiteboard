@@ -1,3 +1,4 @@
+use crate::consts::*;
 use gtk4::prelude::*;
 
 pub fn drag_begin_gesture(drawing_state: crate::AppState, gesture_drag: &gtk4::GestureDrag) {
@@ -6,6 +7,7 @@ pub fn drag_begin_gesture(drawing_state: crate::AppState, gesture_drag: &gtk4::G
         let stroke_width = state.stroke_width.clone();
         let stroke_color = state.stroke_color.clone();
 
+        state.drawing = true;
         state.strokes.push(super::Stroke {
             stroke_width,
             stroke_color,
@@ -34,6 +36,10 @@ pub fn drag_update_gesture(drawing_state: crate::AppState, gesture_drag: &gtk4::
     });
 }
 
+pub fn drag_end_gesture(drawing_state: crate::AppState, gesture_drag: &gtk4::GestureDrag) {
+    gesture_drag.connect_drag_end(move |_, _, _| drawing_state.borrow_mut().drawing = false);
+}
+
 // Hide the dirty cloning behind a pretty function
 pub fn set_drawing_function(drawing_state: crate::AppState) {
     let state = drawing_state.borrow();
@@ -47,8 +53,8 @@ pub fn set_drawing_function(drawing_state: crate::AppState) {
 fn drawing_function(drawing_state: crate::AppState, cr: &gtk4::cairo::Context) {
     let mut state = drawing_state.borrow_mut();
 
-    let len = match state.strokes.len().cmp(&state.max_strokes) {
-        std::cmp::Ordering::Greater => state.strokes.len() - state.max_strokes,
+    let len = match state.strokes.len().cmp(&MAX_STROKES) {
+        std::cmp::Ordering::Greater => state.strokes.len() - MAX_STROKES,
         _ => 0,
     };
     state.strokes.drain(..len);
