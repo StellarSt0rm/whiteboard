@@ -3,7 +3,7 @@ use gtk4::prelude::*;
 
 pub fn scroll_shortcut(
     drawing_state: super::AppState,
-    whiteboard: &libadwaita::ApplicationWindow,
+    window: &libadwaita::ApplicationWindow,
     stroke_size_button: gtk4::SpinButton,
 ) {
     let scroll_controller =
@@ -23,7 +23,7 @@ pub fn scroll_shortcut(
         true.into()
     });
 
-    whiteboard.add_controller(scroll_controller);
+    window.add_controller(scroll_controller);
 }
 
 pub fn control_z_shortcut(
