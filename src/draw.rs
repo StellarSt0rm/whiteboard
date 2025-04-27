@@ -83,8 +83,8 @@ fn drawing_function(drawing_state: crate::AppState, cr: &gtk4::cairo::Context) {
 
         // Make the line from the stroke points
         cr.move_to(
-            stroke.points.first().unwrap().0, // X
-            stroke.points.first().unwrap().1, // Y
+            stroke.points.first().unwrap().0,
+            stroke.points.first().unwrap().1,
         );
 
         for &(x, y) in &stroke.points[1..] {
