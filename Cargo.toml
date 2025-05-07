@@ -5,7 +5,7 @@ edition = "2024"
 
 description = "A simple GTK4 whiteboard app made with Rust"
 repository = "https://github.com/StellarSt0rm/whiteboard"
-license = "MIT"
+license = "AGPL-3.0-only"
 
 [dependencies]
 gtk4 = "0.9.6"
