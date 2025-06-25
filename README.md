@@ -5,6 +5,7 @@ This project is very simple, it will not have an erasing feature because of how 
 
 > [!WARNING]
 > I will never compile this for windows, so dont ask me. You can build it yourself.
+> Nor will I build it for MacOS.
 
 ## Installing
 To install Whiteboard you will need Nix, then just run: `nix develop --command cargo build --release` \
