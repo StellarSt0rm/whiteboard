@@ -4,7 +4,7 @@ So, I was watching a YouTube video, and they were drawing on the screen to highl
 This project is very simple, it will not have an erasing feature because of how the strokes are drawn (It's literally just an SVG, kinda), and it's not supposed to be an app to actuall draw anything, like i said, this was inspired from those in YouTube videos and i doubt you need further erasing than a simple Undo button.
 
 > [!WARNING]
-> I will never compile this for windows, so dont ask me. You can build it yourself.
+> I will never compile this for windows, so dont ask me. You can build it yourself. \
 > Nor will I build it for MacOS.
 
 ## Installing
