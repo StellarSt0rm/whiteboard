@@ -13,12 +13,7 @@ pub fn scroll_shortcut(
 
         state.stroke_width =
             (state.stroke_width - dy * SCROLL_MULTIPLY).clamp(SCROLL_MIN_CLAMP, SCROLL_MAX_CLAMP);
-
-        // Causes error because the SpinButton then tries to re-borrow,
-        // that's why we need to drop the state before calling set_value()
-        let stroke_width = state.stroke_width.clone();
-        drop(state);
-        stroke_size_button.set_value(stroke_width);
+        stroke_size_button.set_value(state.stroke_width);
 
         true.into()
     });

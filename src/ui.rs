@@ -105,7 +105,9 @@ pub fn stroke_size_button(drawing_state: crate::AppState, toolbox: &gtk4::Box) -
 
     let drawing_state_clone = drawing_state.clone();
     stroke_size_button.connect_value_changed(move |obj| {
-        drawing_state_clone.borrow_mut().stroke_width = obj.value();
+        if let Ok(mut state) = drawing_state_clone.try_borrow_mut() {
+            state.stroke_width = obj.value();
+        }
     });
 
     toolbox.append(&stroke_size_button);
